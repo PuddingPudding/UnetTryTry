@@ -10,6 +10,7 @@ public class Unit : NetworkBehaviour
     public Text uiText;
     [SyncVar]
     private float hp;
+    public GameObject[] effectList;
 
     void Start()
     {
@@ -33,6 +34,19 @@ public class Unit : NetworkBehaviour
     }
     void OnMouseDown()
     {
-        hp = 0;
+        CmdSetHp(0);
+    }
+    [Command]
+    void CmdSetHp(float newHp)
+    {
+        hp = newHp;
+        RpcPlayEffect(0);
+    }
+
+    [ClientRpc]
+    void RpcPlayEffect(int index)
+    {
+        //建立新物件並在五秒後刪除
+        Destroy(Instantiate(effectList[index], transform.position, Quaternion.identity), 5);
     }
 }
